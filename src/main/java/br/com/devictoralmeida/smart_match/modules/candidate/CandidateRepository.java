@@ -11,4 +11,8 @@ public interface CandidateRepository extends JpaRepository<CandidateEntity, UUID
     // Esse optional nos permite ter mais alguns acessos no retorno
 
     Optional<CandidateEntity> findByUsernameOrEmail(String username, String email);
+
+    Optional<CandidateEntity> findByUsername(String username);
+
+    Optional<CandidateEntity> findById(UUID id);
 }

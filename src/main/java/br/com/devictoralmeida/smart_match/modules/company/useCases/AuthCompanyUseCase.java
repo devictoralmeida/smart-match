@@ -1,5 +1,9 @@
 package br.com.devictoralmeida.smart_match.modules.company.useCases;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +15,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 
 import br.com.devictoralmeida.smart_match.exceptions.InvalidCredentialsException;
 import br.com.devictoralmeida.smart_match.modules.company.dto.AuthCompanyDTO;
+import br.com.devictoralmeida.smart_match.modules.company.dto.AuthCompanyResponseDTO;
 import br.com.devictoralmeida.smart_match.modules.company.repositories.CompanyRepository;
 
 @Service
@@ -25,7 +30,7 @@ public class AuthCompanyUseCase {
     @Value("${security.token.secret}")
     private String secretKey;
 
-    public String execute(AuthCompanyDTO authCompanyDTO) throws InvalidCredentialsException {
+    public AuthCompanyResponseDTO execute(AuthCompanyDTO authCompanyDTO) throws InvalidCredentialsException {
         // Verificar se existe a empresa pelo username
         var company = this.companyRepository.findByUsername(authCompanyDTO.getUsername()).orElseThrow(
                 () -> {
@@ -44,9 +49,19 @@ public class AuthCompanyUseCase {
         // Vamos dizer qual algoritmo vamos usar, o JWT é o HMAC256, nos () vem a secret_key
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
+        var expiresIn = Instant.now().plus(Duration.ofHours(24));
+
         var token = JWT.create().withIssuer("Smart Match") // No withIssuer você coloca o emissor do token
-            .withSubject(company.getId().toString()) // No withSubject é o subject, ele espera uma String invés de um UUID.)
+            .withExpiresAt(expiresIn) // Token com duração de 24h
+            .withSubject(company.getId().toString()) // No withSubject é o subject, ele espera uma String invés de um UUID.
+            .withClaim("roles", Arrays.asList("COMPANY"))
             .sign(algorithm);
-        return token;
+
+            var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
+            .access_token(token)
+            .expires_in(expiresIn.toEpochMilli())
+            .build();
+            
+        return authCompanyResponseDTO;
     }
 }
