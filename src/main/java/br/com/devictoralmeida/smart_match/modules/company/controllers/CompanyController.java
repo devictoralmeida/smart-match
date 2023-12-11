@@ -1,4 +1,4 @@
-package br.com.devictoralmeida.smart_match.modules.candidate.controllers;
+package br.com.devictoralmeida.smart_match.modules.company.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -7,21 +7,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.devictoralmeida.smart_match.modules.candidate.CandidateEntity;
-
-import br.com.devictoralmeida.smart_match.modules.candidate.useCases.CreateCandidateUseCase;
+import br.com.devictoralmeida.smart_match.modules.company.entities.CompanyEntity;
+import br.com.devictoralmeida.smart_match.modules.company.useCases.CreateCompanyUseCase;
 import jakarta.validation.Valid;
 
 @RestController()
-@RequestMapping("/candidates")
-public class CandidateController {
+@RequestMapping("/companies")
+public class CompanyController {
     @Autowired
-    private CreateCandidateUseCase createCandidateUseCase;
+    private CreateCompanyUseCase createCompanyUseCase;
 
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateData) {
+    public ResponseEntity<Object> create(@Valid @RequestBody CompanyEntity companyData) {
         try {
-            var result = this.createCandidateUseCase.execute(candidateData);
+            var result = this.createCompanyUseCase.execute(companyData);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

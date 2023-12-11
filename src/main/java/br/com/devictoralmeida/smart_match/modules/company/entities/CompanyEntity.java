@@ -1,4 +1,4 @@
-package br.com.devictoralmeida.smart_match.modules.candidate;
+package br.com.devictoralmeida.smart_match.modules.company.entities;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,9 +17,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-@Entity(name = "candidates")
-public class CandidateEntity {
-
+@Entity(name = "companies")
+public class CompanyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -27,7 +26,6 @@ public class CandidateEntity {
     @NotBlank(message = "This field is required")
     private String name;
 
-    // Aqui não vamos permitir que o username contenha espaços
     @NotBlank(message = "This field is required")
     @Pattern(regexp = "\\S+", message = "The [username] field cannot contain blanks")
     private String username;
@@ -38,10 +36,9 @@ public class CandidateEntity {
     @Length(min = 6, max = 100, message = "The [password] field must contain 6 to 100 characters")
     private String password;
 
-    @NotBlank(message = "This field is required")
-    private String description;
+    private String website;
 
-    private String resume;
+    private String description;
 
     @CreationTimestamp
     @Column(name = "created_at")
