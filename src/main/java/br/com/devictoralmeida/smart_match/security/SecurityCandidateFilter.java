@@ -49,7 +49,9 @@ public class SecurityCandidateFilter extends OncePerRequestFilter {
 
                 // Preciso do stream para poder usar o map e gerar um novo array criando um Authority para cada role.
                 var grants = roles.stream().map(
-                        role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()) // Preciso ter esse prefixo ROLE_
+                        role -> {
+                            return new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase());
+                        } // Preciso ter esse prefixo ROLE_
                 ).toList();
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(token.getSubject(),

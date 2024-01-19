@@ -20,17 +20,24 @@ public class SecurityConfig {
     @Autowired
     private SecurityCandidateFilter securityCandidateFilter;
 
-    // Precisamos desse decorator para dizer ao spring q estou sobrescrevendo as config iniciais
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // Desabiliando as configurações default
-                                                                                  
+    private static final String[] SWAGGER_LIST = {
+            "/swagger-ui/**",
+            "/v*/api-docs/**",
+            "/swagger-resources/**"
+    };
 
+    // Precisamos desse decorator para dizer ao spring q estou sobrescrevendo as
+    // config iniciais
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Desabiliando as configurações default
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/candidates").permitAll()
                             .requestMatchers("/companies").permitAll()
                             .requestMatchers("/companies/auth").permitAll()
-                            .requestMatchers("/candidates/auth").permitAll();
+                            .requestMatchers("/candidates/auth").permitAll()
+                            .requestMatchers(SWAGGER_LIST).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 // Vamos chamar essa função que irá criar um middleware em algumas rotas
