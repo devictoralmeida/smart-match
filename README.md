@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="./src/main/java/br/com/devictoralmeida/smart_match/assets/logo.png" alt="Smart Match Logo" />
   <h1>Smart Match API</h1>
 </div>
 Smart Match é uma API Rest, que foi desenvolvida para facilitar o gerenciamento de empresas, vagas e candidatos de uma
