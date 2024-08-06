@@ -38,48 +38,41 @@ class CreateJobControllerTest {
 
   @BeforeEach
   void setup() {
-    // Criando estrutura para rodar os testes
     mvc = MockMvcBuilders
-        .webAppContextSetup(context)
-        .apply(SecurityMockMvcConfigurers.springSecurity())
-        .build();
+      .webAppContextSetup(context)
+      .apply(SecurityMockMvcConfigurers.springSecurity())
+      .build();
   }
 
   @Test
   @DisplayName("Should be able to create a new job")
   void should_be_able_to_create_a_new_job() throws Exception {
-    // 1º Vamos precisar criar uma empresa
+
     var company = CompanyEntity.builder()
-        .description("Description Test")
-        .email("test@mail.com")
-        .password("123456")
-        .username("java_test")
-        .name("Test Company")
-        .build();
+      .description("Description Test")
+      .email("test@mail.com")
+      .password("123456")
+      .username("java_test")
+      .name("Test Company")
+      .build();
 
-    // Ele usou o Save com o Flush para salvar imediatamente, invés de aguardar toda
-    // a requisição, isso pq nós vamos precisar do id dessa company logo abaixo
-    company = this.companyRepository.saveAndFlush(company);
+    company = companyRepository.saveAndFlush(company);
 
-    // Criando o corpo da requisição
     CreateJobDTO createJobDTO = CreateJobDTO.builder()
-        .benefits("Benefits Test")
-        .description("Description Test")
-        .level("Junior")
-        .build();
+      .benefits("Benefits Test")
+      .description("Description Test")
+      .level("Junior")
+      .build();
 
-    // Transformando o corpo da requisição em JSON
     String requestBody = TestUtils.objectToJson(createJobDTO);
 
-    // Fazendo a requisição
     mvc.perform(MockMvcRequestBuilders.post("/companies/jobs")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestBody)
-        // Inserindo o token na requisição
         .header("Authorization",
-            TestUtils.generateToken(company.getId(),
-                "651651askdbajfgbaksdbangfadnmak")))
-        .andExpect(MockMvcResultMatchers.status().isOk());
+          TestUtils.generateToken(company.getId(),
+            "651651askdbajfgbaksdbangfadnmak")))
+      .andExpect(MockMvcResultMatchers.status().isOk());
 
   }
 
@@ -89,10 +82,10 @@ class CreateJobControllerTest {
     var randomUUID = UUID.randomUUID();
 
     CreateJobDTO createJobDTO = CreateJobDTO.builder()
-        .benefits("Benefits Test")
-        .description("Description Test")
-        .level("Junior")
-        .build();
+      .benefits("Benefits Test")
+      .description("Description Test")
+      .level("Junior")
+      .build();
 
     // Transformando o corpo da requisição em JSON
     String requestBody = TestUtils.objectToJson(createJobDTO);
@@ -100,11 +93,10 @@ class CreateJobControllerTest {
     mvc.perform(MockMvcRequestBuilders.post("/companies/jobs")
         .contentType(MediaType.APPLICATION_JSON)
         .content(requestBody)
-        // Inserindo o token na requisição
         .header("Authorization",
-            TestUtils.generateToken(randomUUID,
-                "651651askdbajfgbaksdbangfadnmak")))
-        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+          TestUtils.generateToken(randomUUID,
+            "651651askdbajfgbaksdbangfadnmak")))
+      .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
   }
 }

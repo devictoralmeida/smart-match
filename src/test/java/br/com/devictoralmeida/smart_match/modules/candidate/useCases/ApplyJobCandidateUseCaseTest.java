@@ -24,67 +24,65 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApplyJobCandidateUseCaseTest {
-    @InjectMocks
-    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
+  @InjectMocks
+  private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
-    @Mock
-    private CandidateRepository candidateRepository;
+  @Mock
+  private CandidateRepository candidateRepository;
 
-    @Mock
-    private JobRepository jobRepository;
+  @Mock
+  private JobRepository jobRepository;
 
-    @Mock
-    private ApplyJobRepository applyJobRepository;
+  @Mock
+  private ApplyJobRepository applyJobRepository;
 
-    @Test
-    @DisplayName("Should not be able to apply job with candidate not found")
-    void shoud_not_be_able_to_apply_job_with_candidate_not_found() {
-        try {
-            this.applyJobCandidateUseCase.execute(null, null);
-        } catch (Exception e) {
-            assertThat(e).isInstanceOf(UserNotFoundException.class);
-        }
+  @Test
+  @DisplayName("Should not be able to apply job with candidate not found")
+  void should_not_be_able_to_apply_job_with_candidate_not_found() {
+    try {
+      applyJobCandidateUseCase.execute(null, null);
+    } catch (Exception e) {
+      assertThat(e).isInstanceOf(UserNotFoundException.class);
     }
+  }
 
-    @Test
-    @DisplayName("Should not be able to apply job with job not found")
-    void shoud_not_be_able_to_apply_job_with_job_not_found() {
-        // Quando chamar o find candidato por id, vamos passar um uuid aleatório e
-        // devolver um candidato fake
-        var idCandidate = UUID.randomUUID();
+  @Test
+  @DisplayName("Should not be able to apply job with job not found")
+  void should_not_be_able_to_apply_job_with_job_not_found() {
+    var idCandidate = UUID.randomUUID();
 
-        var candidate = new CandidateEntity();
-        candidate.setId(idCandidate);
+    var candidate = new CandidateEntity();
+    candidate.setId(idCandidate);
 
-        // Precisamos do optional, pq é oq o método findById retorna
-        when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(candidate));
 
-        try {
-            this.applyJobCandidateUseCase.execute(idCandidate, null);
-        } catch (Exception e) {
-            assertThat(e).isInstanceOf(JobNotFoundException.class);
-        }
+    when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(candidate));
+
+    try {
+      applyJobCandidateUseCase.execute(idCandidate, null);
+    } catch (Exception e) {
+      assertThat(e).isInstanceOf(JobNotFoundException.class);
     }
+  }
 
-    @Test
-    @DisplayName("Should be able to create a new apply job")
-    void shoud_be_able_to_create_a_new_aplly_job() {
-        var idCandidate = UUID.randomUUID();
-        var idJob = UUID.randomUUID();
+  @Test
+  @DisplayName("Should be able to create a new apply job")
+  void should_be_able_to_create_a_new_aplly_job() {
+    var idCandidate = UUID.randomUUID();
+    var idJob = UUID.randomUUID();
 
-        var applyJob = ApplyJobEntity.builder().candidateId(idCandidate)
-                .jobId(idJob).build();
+    var applyJob = ApplyJobEntity.builder().candidateId(idCandidate)
+      .jobId(idJob).build();
 
-        var applyJobCreated = ApplyJobEntity.builder().id(UUID.randomUUID()).build();
+    var applyJobCreated = ApplyJobEntity.builder().id(UUID.randomUUID()).build();
 
-        when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(new CandidateEntity()));
-        when(jobRepository.findById(idJob)).thenReturn(Optional.of(new JobEntity()));
+    when(candidateRepository.findById(idCandidate)).thenReturn(Optional.of(new CandidateEntity()));
+    when(jobRepository.findById(idJob)).thenReturn(Optional.of(new JobEntity()));
 
-        when(applyJobRepository.save(applyJob)).thenReturn(applyJobCreated);
+    when(applyJobRepository.save(applyJob)).thenReturn(applyJobCreated);
 
-        var result = applyJobCandidateUseCase.execute(idCandidate, idJob);
+    var result = applyJobCandidateUseCase.execute(idCandidate, idJob);
 
-        assertThat(result).hasFieldOrProperty("id");
-        assertNotNull(result.getId());
-    }
+    assertThat(result).hasFieldOrProperty("id");
+    assertNotNull(result.getId());
+  }
 }
