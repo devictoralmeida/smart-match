@@ -8,6 +8,8 @@ exibição do currículo do candidato e listagem de informações das vagas. Des
 , banco de dados H2 e cobertura de testes com JUnit, autenticação usando o Spring Security,
 token JWT, encriptação de senhas utilizando BCrypt e documentação desenvolvida pelo Swagger, tornando a aplicação flexível e robusta.
 
+<p> <strong> BaseURL: </strong> https://smart-match.onrender.com </p>
+
 # 📒 Índice
 
 * [Descrição](#descrição)
