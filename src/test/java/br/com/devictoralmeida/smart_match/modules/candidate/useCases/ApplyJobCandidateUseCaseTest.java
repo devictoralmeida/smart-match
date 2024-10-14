@@ -2,10 +2,10 @@ package br.com.devictoralmeida.smart_match.modules.candidate.useCases;
 
 import br.com.devictoralmeida.smart_match.exceptions.JobNotFoundException;
 import br.com.devictoralmeida.smart_match.exceptions.UserNotFoundException;
-import br.com.devictoralmeida.smart_match.modules.candidate.CandidateEntity;
-import br.com.devictoralmeida.smart_match.modules.candidate.CandidateRepository;
 import br.com.devictoralmeida.smart_match.modules.candidate.entities.ApplyJobEntity;
+import br.com.devictoralmeida.smart_match.modules.candidate.entities.CandidateEntity;
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.ApplyJobRepository;
+import br.com.devictoralmeida.smart_match.modules.candidate.repository.CandidateRepository;
 import br.com.devictoralmeida.smart_match.modules.company.entities.JobEntity;
 import br.com.devictoralmeida.smart_match.modules.company.repositories.JobRepository;
 import org.junit.jupiter.api.DisplayName;
