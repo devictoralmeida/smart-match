@@ -10,6 +10,12 @@ token JWT, encriptação de senhas utilizando BCrypt e documentação desenvolvi
 
 <p> <strong> BaseURL: </strong> https://smart-match.onrender.com </p>
 
+## 📚 Documentação
+
+Todos os endpoints da API foram documentados usando Swagger. Para visualizar basta acessar a URL abaixo.
+
+<p>Link: <a href="https://smart-match.onrender.com/swagger-ui/index.html" target="_blank">https://smart-match.onrender.com/swagger-ui/index.html</a></p>
+
 # 📒 Índice
 
 * [Descrição](#descrição)

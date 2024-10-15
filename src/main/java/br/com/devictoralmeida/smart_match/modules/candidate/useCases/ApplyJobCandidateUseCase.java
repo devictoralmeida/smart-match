@@ -6,39 +6,27 @@ import br.com.devictoralmeida.smart_match.modules.candidate.entities.ApplyJobEnt
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.ApplyJobRepository;
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.CandidateRepository;
 import br.com.devictoralmeida.smart_match.modules.company.repositories.JobRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ApplyJobCandidateUseCase {
-  @Autowired
-  private CandidateRepository candidateRepository;
+  private final CandidateRepository candidateRepository;
+  private final JobRepository jobRepository;
+  private final ApplyJobRepository applyJobRepository;
 
-  @Autowired
-  private JobRepository jobRepository;
 
-  @Autowired
-  private ApplyJobRepository applyJobRepository;
-
-  // Vamos precisar do ID do candidato e o ID da vaga
   public ApplyJobEntity execute(UUID idCandidate, UUID idJob) {
-    // Precisamos validar se existe o candidato e a vaga
-    candidateRepository.findById(idCandidate).orElseThrow(() -> {
-      throw new UserNotFoundException();
-    });
-
-    jobRepository.findById(idJob).orElseThrow(() -> {
-      throw new JobNotFoundException();
-    });
+    candidateRepository.findById(idCandidate).orElseThrow(UserNotFoundException::new);
+    jobRepository.findById(idJob).orElseThrow(JobNotFoundException::new);
 
     var applyJob = ApplyJobEntity.builder()
       .candidateId(idCandidate)
       .jobId(idJob)
       .build();
-
     return applyJobRepository.save(applyJob);
-
   }
 }

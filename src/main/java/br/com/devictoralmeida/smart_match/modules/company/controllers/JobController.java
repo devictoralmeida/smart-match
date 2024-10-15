@@ -29,32 +29,28 @@ public class JobController {
   private CreateJobUseCase createJobUseCase;
 
   @PostMapping()
-  @PreAuthorize("hasRole('COMPANY')") // Somente role de company vai acessar essa rota
+  @PreAuthorize("hasRole('COMPANY')")
   @Tag(name = "Vagas", description = "Informações das vagas")
   @Operation(summary = "Cadastro de vagas", description = "Essa rota é responsável por cadastrar as vagas dentro da empresa")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", content = {
-          @Content(schema = @Schema(implementation = JobEntity.class))
-      })
+    @ApiResponse(responseCode = "200", content = {
+      @Content(schema = @Schema(implementation = JobEntity.class))
+    })
   })
   @SecurityRequirement(name = "jwt_auth")
   public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO createJobDTO, HttpServletRequest request) {
-    // Vamos pegar o company_id criado pelo filter, ele retorna um obj
-    var companyId = request.getAttribute("company_id");
 
-    // Precisamos transformar o obj acima em string e depois em UUID e seta-lo no
-    // nosso jobEntity
-    // Obj --> String --> UUID
+    var companyId = request.getAttribute("company_id");
 
     try {
       var jobEntity = JobEntity.builder()
-          .companyId(UUID.fromString(companyId.toString()))
-          .benefits(createJobDTO.getBenefits())
-          .description(createJobDTO.getDescription())
-          .level(createJobDTO.getLevel())
-          .build();
+        .companyId(UUID.fromString(companyId.toString()))
+        .benefits(createJobDTO.getBenefits())
+        .description(createJobDTO.getDescription())
+        .level(createJobDTO.getLevel())
+        .build();
 
-      var result = this.createJobUseCase.execute(jobEntity);
+      var result = createJobUseCase.execute(jobEntity);
       return ResponseEntity.ok().body(result);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());

@@ -3,23 +3,20 @@ package br.com.devictoralmeida.smart_match.modules.candidate.useCases;
 import br.com.devictoralmeida.smart_match.exceptions.UserFoundException;
 import br.com.devictoralmeida.smart_match.modules.candidate.entities.CandidateEntity;
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.CandidateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Service // Preciso da anotation de serviço para o useCase
+@Service
+@RequiredArgsConstructor
 public class CreateCandidateUseCase {
-
-  @Autowired
-  private CandidateRepository candidateRepository;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final CandidateRepository candidateRepository;
+  private final PasswordEncoder passwordEncoder;
 
   public CandidateEntity execute(CandidateEntity candidateEntity) {
     candidateRepository
       .findByUsernameOrEmail(candidateEntity.getUsername(), candidateEntity.getEmail())
-      .ifPresent((user) -> { // esse isPresent é uma funcionalidade do Optional
+      .ifPresent((user) -> {
         throw new UserFoundException();
       });
 

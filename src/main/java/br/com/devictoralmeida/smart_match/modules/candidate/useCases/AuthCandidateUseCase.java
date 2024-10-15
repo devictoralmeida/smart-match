@@ -6,7 +6,7 @@ import br.com.devictoralmeida.smart_match.modules.candidate.dto.AuthCandidateRes
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.CandidateRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,33 +18,29 @@ import java.util.Arrays;
 
 
 @Service
+@RequiredArgsConstructor
 public class AuthCandidateUseCase {
-  @Autowired
-  private CandidateRepository candidateRepository;
-
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final CandidateRepository candidateRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Value("${security.token.secret.candidate}")
   private String secretKey;
 
   public AuthCandidateResponseDTO execute(AuthCandidateRequestDTO authCandidateRequestDTO)
     throws InvalidCredentialsException {
-    // Verificar se existe o candidato pelo username
-    var candidate = candidateRepository.findByUsername(authCandidateRequestDTO.username()).orElseThrow(
-      () -> {
-        throw new UsernameNotFoundException("Invalid credentials");
-      });
 
-    // Verificar se as senhas são iguais
+    var candidate = candidateRepository.findByUsername(authCandidateRequestDTO.username()).orElseThrow(
+      () -> new UsernameNotFoundException("Invalid credentials"));
+
+
     var passwordMatches = passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
 
-    // Se for diferente --> Erro
+
     if (!passwordMatches) {
       throw new InvalidCredentialsException();
     }
 
-    // Se der ok --> Gerar token
+
     Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
     var expiresIn = Instant.now().plus(Duration.ofHours(24));
@@ -52,14 +48,12 @@ public class AuthCandidateUseCase {
     var token = JWT.create().withIssuer("Smart Match")
       .withExpiresAt(expiresIn)
       .withSubject(candidate.getId().toString())
-      .withClaim("roles", Arrays.asList("CANDIDATE")) // Criando a role do usuário
+      .withClaim("roles", Arrays.asList("CANDIDATE"))
       .sign(algorithm);
 
-    var authCandidateResponse = AuthCandidateResponseDTO.builder()
+    return AuthCandidateResponseDTO.builder()
       .access_token(token)
       .expires_in(expiresIn.toEpochMilli())
       .build();
-
-    return authCandidateResponse;
   }
 }

@@ -2,22 +2,20 @@ package br.com.devictoralmeida.smart_match.modules.candidate.useCases;
 
 import br.com.devictoralmeida.smart_match.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.devictoralmeida.smart_match.modules.candidate.repository.CandidateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileCandidateUseCase {
-  @Autowired
-  private CandidateRepository candidateRepository;
+  private final CandidateRepository candidateRepository;
 
   public ProfileCandidateResponseDTO execute(UUID candidateId) {
     var candidate = candidateRepository.findById(candidateId).orElseThrow(
-      () -> {
-        throw new UsernameNotFoundException("User not found");
-      });
+      () -> new UsernameNotFoundException("User not found"));
     return ProfileCandidateResponseDTO.builder()
       .name(candidate.getName())
       .description(candidate.getDescription())

@@ -24,8 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT) // Criando um ambiente web com porta randômica
-@ActiveProfiles("test") // Pegar o application-test.properties
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 class CreateJobControllerTest {
 
   private MockMvc mvc;
@@ -87,7 +87,7 @@ class CreateJobControllerTest {
       .level("Junior")
       .build();
 
-    // Transformando o corpo da requisição em JSON
+
     String requestBody = TestUtils.objectToJson(createJobDTO);
 
     mvc.perform(MockMvcRequestBuilders.post("/companies/jobs")

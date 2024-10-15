@@ -59,7 +59,7 @@ public class CandidateController {
   }
 
   @GetMapping("/profile")
-  @PreAuthorize("hasRole('CANDIDATE')") // Aqui eu digo que apenas candidates podem acessar essa rota
+  @PreAuthorize("hasRole('CANDIDATE')")
   @Operation(summary = "Acessar dados do usuário", description = "Essa rota é responsável por trazer os dados do usuário através do token")
   @ApiResponses({
     @ApiResponse(responseCode = "200", content = {
